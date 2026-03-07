@@ -1,11 +1,25 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function DealRoomPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 p-8">
+        <div className="max-w-4xl mx-auto text-center">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">Loading Deal Room...</h1>
+        </div>
+      </div>
+    }>
+      <DealRoomContent />
+    </Suspense>
+  )
+}
+
+function DealRoomContent() {
   const searchParams = useSearchParams()
   const bundleId = searchParams.get('id')
   const [bundle, setBundle] = useState<any>(null)
