@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Dict, Any, List
 from datetime import datetime
 
-from ..models.schemas import (
+from models.schemas import (
     AgentResult,
     AgentStatus,
     AOI
@@ -19,7 +19,7 @@ from ..models.schemas import (
 class SatelliteAgent:
     """Agent for processing satellite-derived environmental data from MVP files."""
     
-    def __init__(self, data_dir: str = "backend/data"):
+    def __init__(self, data_dir: str = "data"):
         self.data_dir = Path(data_dir)
         self.agent_name = "satellite_agent"
     

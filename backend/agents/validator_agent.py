@@ -7,7 +7,7 @@ import time
 from typing import Dict, Any
 from datetime import datetime
 
-from ..models.schemas import (
+from models.schemas import (
     AgentResult,
     AgentStatus
 )

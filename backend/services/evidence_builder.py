@@ -6,10 +6,10 @@ Builds and manages MVP EnvironmentalEvidenceBundle objects.
 import json
 import uuid
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 from datetime import datetime
 
-from ..models.schemas import (
+from models.schemas import (
     EnvironmentalEvidenceBundle
 )
 
@@ -17,7 +17,7 @@ from ..models.schemas import (
 class EvidenceBuilder:
     """Service for building and managing environmental evidence bundles."""
     
-    def __init__(self, output_dir: str = "backend/outputs"):
+    def __init__(self, output_dir: str = "outputs"):
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(exist_ok=True)
     

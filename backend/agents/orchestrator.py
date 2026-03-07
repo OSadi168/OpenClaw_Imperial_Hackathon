@@ -8,7 +8,7 @@ import time
 from typing import Dict, Any
 from datetime import datetime
 
-from ..models.schemas import (
+from models.schemas import (
     OrchestratorRequest,
     OrchestratorResponse,
     AgentResult,
@@ -16,9 +16,9 @@ from ..models.schemas import (
     AOI,
     EnvironmentalEvidenceBundle
 )
-from .satellite_agent import SatelliteAgent
-from .weather_agent import WeatherAgent
-from .validator_agent import ValidatorAgent
+from agents.satellite_agent import SatelliteAgent
+from agents.weather_agent import WeatherAgent
+from agents.validator_agent import ValidatorAgent
 
 
 class Orchestrator:

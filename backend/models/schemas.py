@@ -12,7 +12,7 @@ class AOI(BaseModel):
     """Area of Interest definition."""
     id: str
     name: str
-    coordinates: List[List[float]]  # GeoJSON polygon coordinates
+    coordinates: List[Any]  # GeoJSON polygon coordinates
     area_hectares: float
 
 
