@@ -6,3 +6,7 @@ python-dotenv
 requests
 pandas
 numpy
+rasterio
+geopandas
+shapely
+xarray
