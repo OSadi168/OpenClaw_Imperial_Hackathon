@@ -1,0 +1,50 @@
+{
+  "aoi_name": "Amazon Ridge Conservation Area",
+  "satellite_analysis": {
+    "earlier_scene": {
+      "date": "2023-12-01",
+      "satellite": "Landsat-8",
+      "scene_id": "LC08_001063_20231201",
+      "cloud_cover": 0.05,
+      "ndvi_mean": 0.68,
+      "ndvi_median": 0.72,
+      "pixel_count": 125000
+    },
+    "later_scene": {
+      "date": "2024-01-15",
+      "satellite": "Landsat-8", 
+      "scene_id": "LC08_001063_20240115",
+      "cloud_cover": 0.08,
+      "ndvi_mean": 0.74,
+      "ndvi_median": 0.78,
+      "pixel_count": 125000
+    },
+    "ndvi_delta": {
+      "mean_change": 0.06,
+      "median_change": 0.06,
+      "percent_change": 8.8,
+      "area_ha": 5000,
+      "quality_score": 0.92
+    },
+    "delta_quality_flags": {
+      "high_confidence": true,
+      "sufficient_coverage": true,
+      "seasonal_consistent": true,
+      "cloud_free": true,
+      "processing_complete": true
+    },
+    "change_signals": {
+      "vegetation_increase": 0.82,
+      "vegetation_decrease": 0.12,
+      "no_change": 0.06,
+      "primary_change": "vegetation_increase",
+      "change_magnitude": 0.18
+    }
+  },
+  "run_trace": {
+    "processing_date": "2024-01-16T14:20:00Z",
+    "algorithm_version": "v2.1.0",
+    "processing_time_seconds": 45.2,
+    "data_source": "USGS Landsat Archive"
+  }
+}

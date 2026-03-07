@@ -1,0 +1,42 @@
+{
+  "aoi_name": "Amazon Ridge Conservation Area",
+  "weather_risk": {
+    "drought_score": 0.32,
+    "tier": "MODERATE",
+    "confidence": 0.87,
+    "drivers": {
+      "precipitation_deficit": 42.8,
+      "temperature_anomaly": 1.6,
+      "soil_moisture_deficit": 0.45,
+      "evapotranspiration_increase": 0.23,
+      "seasonal_timing": "late_dry_season"
+    },
+    "warnings": [
+      "Moderate drought stress detected",
+      "Soil moisture below optimal levels",
+      "Temperature above seasonal average"
+    ],
+    "temporal_trend": {
+      "current_month": 0.32,
+      "previous_month": 0.28,
+      "three_month_avg": 0.31,
+      "trend_direction": "worsening"
+    }
+  },
+  "debug": {
+    "data_sources": ["NOAA Climate Data", "TRMM Precipitation", "MODIS Temperature"],
+    "processing_date": "2024-01-16T14:20:00Z",
+    "algorithm_version": "v3.2.1",
+    "quality_checks": {
+      "data_completeness": 0.95,
+      "temporal_coverage": 0.92,
+      "spatial_consistency": 0.88
+    }
+  },
+  "run_trace": {
+    "processing_date": "2024-01-16T14:20:00Z",
+    "algorithm_version": "v3.2.1",
+    "processing_time_seconds": 12.8,
+    "data_source": "NOAA Climate Prediction Center"
+  }
+}

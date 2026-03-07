@@ -1,0 +1,1 @@
+{"risk_score": 0.32, "timestamp": "2024-01-15T10:30:00Z", "confidence": "medium", "metadata": {"data_source": "NOAA", "precipitation_deficit": 42.8, "temperature_anomaly": 1.6, "soil_moisture": 0.45, "period_months": 6, "processing_date": "2024-01-16T14:20:00Z"}}

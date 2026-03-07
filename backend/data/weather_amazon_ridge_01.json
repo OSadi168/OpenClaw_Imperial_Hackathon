@@ -1,0 +1,1 @@
+{"risk_score": 0.28, "timestamp": "2024-01-15T10:30:00Z", "confidence": "high", "metadata": {"data_source": "OpenWeather", "avg_temperature": 27.8, "avg_humidity": 68.5, "precipitation_mm": 125.3, "wind_speed": 11.8, "period_days": 30, "processing_date": "2024-01-16T14:20:00Z"}}
