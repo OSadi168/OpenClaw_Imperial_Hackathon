@@ -7,6 +7,8 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Dict, Any
 import uvicorn
+import csv
+from pathlib import Path
 
 from models.schemas import (
     OrchestratorRequest,
@@ -99,6 +101,21 @@ async def list_evidence_bundles():
         return {"bundles": bundles}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to list bundles: {str(e)}")
+
+
+@app.get("/bundles/latest")
+async def get_latest_bundle():
+    """Get the most recently created evidence bundle."""
+    try:
+        bundles = evidence_builder.list_bundles()
+        if not bundles:
+            raise HTTPException(status_code=404, detail="No bundles found. Run an analysis first.")
+        bundles.sort(key=lambda b: b.get("created_at", ""), reverse=True)
+        return bundles[0]
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.get("/bundles/{bundle_id}")
@@ -226,6 +243,36 @@ async def get_sample_aois():
         }
     ]
     return {"aois": sample_aois}
+
+
+@app.get("/api/verra-projects")
+async def get_verra_projects():
+    """Get cleaned Verra carbon project data."""
+    csv_path = Path(__file__).parent.parent / "Data" / "esg" / "allprojects_cleaned.csv"
+    if not csv_path.exists():
+        raise HTTPException(status_code=404, detail="Verra dataset not found")
+    projects = []
+    with open(csv_path, 'r') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            projects.append(row)
+    return {"projects": projects[:20], "total": len(projects)}
+
+
+@app.get("/api/verra-companies")
+async def get_verra_companies():
+    """Get unique companies from Verra dataset."""
+    csv_path = Path(__file__).parent.parent / "Data" / "esg" / "companies_dataset.csv"
+    if not csv_path.exists():
+        raise HTTPException(status_code=404, detail="Companies dataset not found")
+    companies = []
+    with open(csv_path, 'r') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            companies.append(row)
+    hash_path = Path(__file__).parent.parent / "Data" / "esg" / "dataset_hash.txt"
+    dataset_hash = hash_path.read_text().strip() if hash_path.exists() else "N/A"
+    return {"companies": companies[:20], "total": len(companies), "blockchain_hash": dataset_hash}
 
 
 if __name__ == "__main__":

@@ -14,6 +14,8 @@ export default function EvidencePage() {
   useEffect(() => {
     if (bundleId) {
       fetchBundle(bundleId)
+    } else {
+      fetchLatestBundle()
     }
   }, [bundleId])
 
@@ -29,6 +31,20 @@ export default function EvidencePage() {
     }
   }
 
+  const fetchLatestBundle = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/bundles/latest')
+      if (response.ok) {
+        const data = await response.json()
+        setBundle(data)
+      }
+    } catch (error) {
+      console.error('Failed to fetch latest bundle:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const getConfidenceColor = (confidence: string) => {
     switch (confidence) {
       case 'high': return 'text-green-600 bg-green-100'
@@ -36,20 +52,6 @@ export default function EvidencePage() {
       case 'low': return 'text-red-600 bg-red-100'
       default: return 'text-gray-600 bg-gray-100'
     }
-  }
-
-  if (!bundleId) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Evidence Bundle</h1>
-          <p className="text-gray-600 mb-8">No bundle ID provided</p>
-          <Button>
-            <a href="/results">View Results</a>
-          </Button>
-        </div>
-      </div>
-    )
   }
 
   if (loading) {

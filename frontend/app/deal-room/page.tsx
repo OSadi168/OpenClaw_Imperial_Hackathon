@@ -10,11 +10,18 @@ export default function DealRoomPage() {
   const bundleId = searchParams.get('id')
   const [bundle, setBundle] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [verraProjects, setVerraProjects] = useState<any[]>([])
+  const [verraTotal, setVerraTotal] = useState(0)
+  const [companies, setCompanies] = useState<any[]>([])
+  const [blockchainHash, setBlockchainHash] = useState('')
 
   useEffect(() => {
     if (bundleId) {
       fetchBundle(bundleId)
+    } else {
+      fetchLatestBundle()
     }
+    fetchVerraData()
   }, [bundleId])
 
   const fetchBundle = async (id: string) => {
@@ -29,18 +36,39 @@ export default function DealRoomPage() {
     }
   }
 
-  if (!bundleId) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 p-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Deal Room</h1>
-          <p className="text-gray-600 mb-8">No bundle ID provided</p>
-          <Button>
-            <a href="/results">View Results</a>
-          </Button>
-        </div>
-      </div>
-    )
+  const fetchLatestBundle = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/bundles/latest')
+      if (response.ok) {
+        const data = await response.json()
+        setBundle(data)
+      }
+    } catch (error) {
+      console.error('Failed to fetch latest bundle:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const fetchVerraData = async () => {
+    try {
+      const [projRes, compRes] = await Promise.all([
+        fetch('http://localhost:8000/api/verra-projects'),
+        fetch('http://localhost:8000/api/verra-companies')
+      ])
+      if (projRes.ok) {
+        const projData = await projRes.json()
+        setVerraProjects(projData.projects || [])
+        setVerraTotal(projData.total || 0)
+      }
+      if (compRes.ok) {
+        const compData = await compRes.json()
+        setCompanies(compData.companies || [])
+        setBlockchainHash(compData.blockchain_hash || '')
+      }
+    } catch (error) {
+      console.error('Failed to fetch Verra data:', error)
+    }
   }
 
   if (loading) {
@@ -240,6 +268,83 @@ export default function DealRoomPage() {
             </div>
           </div>
         </div>
+
+        {blockchainHash && (
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle className="text-purple-600">Blockchain Anchoring</CardTitle>
+              <CardDescription>SHA256 hash of verified company dataset for immutable audit trail</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm break-all">
+                {blockchainHash}
+              </div>
+              <p className="text-xs text-gray-500 mt-2">This hash anchors the cleaned Verra dataset ({verraTotal} projects, {companies.length} companies) to an immutable record.</p>
+            </CardContent>
+          </Card>
+        )}
+
+        {verraProjects.length > 0 && (
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle className="text-blue-600">Verra Carbon Registry Projects</CardTitle>
+              <CardDescription>Matching projects from the cleaned Verra dataset ({verraTotal} total projects)</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="text-left py-2 px-3 font-semibold">ID</th>
+                      <th className="text-left py-2 px-3 font-semibold">Project Name</th>
+                      <th className="text-left py-2 px-3 font-semibold">Proponent</th>
+                      <th className="text-left py-2 px-3 font-semibold">Type</th>
+                      <th className="text-left py-2 px-3 font-semibold">Status</th>
+                      <th className="text-right py-2 px-3 font-semibold">Est. Annual Reductions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {verraProjects.slice(0, 8).map((project: any, index: number) => (
+                      <tr key={index} className="border-b hover:bg-gray-50">
+                        <td className="py-2 px-3 text-gray-500">{project.ID}</td>
+                        <td className="py-2 px-3 font-medium">{project.Name?.slice(0, 40)}{project.Name?.length > 40 ? '...' : ''}</td>
+                        <td className="py-2 px-3">{project.Proponent?.slice(0, 25)}{project.Proponent?.length > 25 ? '...' : ''}</td>
+                        <td className="py-2 px-3">
+                          <span className="px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs">{project['Project Type']}</span>
+                        </td>
+                        <td className="py-2 px-3">
+                          <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-xs">{project.Status}</span>
+                        </td>
+                        <td className="py-2 px-3 text-right">{project['Estimated Annual Emission Reductions']}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="text-xs text-gray-500 mt-3">Showing 8 of {verraTotal} registered Verra projects</p>
+            </CardContent>
+          </Card>
+        )}
+
+        {companies.length > 0 && (
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle className="text-indigo-600">Verified Counterparties</CardTitle>
+              <CardDescription>Companies extracted from Verra proponent data ({companies.length} organizations)</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-3">
+                {companies.slice(0, 12).map((company: any, index: number) => (
+                  <div key={index} className="bg-gray-50 p-3 rounded-lg text-sm">
+                    <div className="font-medium">{company.company_name?.slice(0, 30)}{company.company_name?.length > 30 ? '...' : ''}</div>
+                    <div className="text-xs text-gray-500">{company.country} | {company.region}</div>
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-gray-500 mt-3">Showing 12 of {companies.length} verified organizations</p>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="text-center space-x-4">
           <Button size="lg" className="px-8">
