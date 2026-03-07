@@ -80,8 +80,8 @@ class ValidatorAgent:
         start_time = time.time()
         
         try:
-            satellite_analysis = satellite_result.get("data", {}).get("satellite_analysis", {})
-            weather_risk = weather_result.get("data", {}).get("weather_risk", {})
+            satellite_analysis = satellite_result.get("satellite_analysis", {})
+            weather_risk = weather_result.get("weather_risk", {})
             
             validator_review = self.validate_mvp_bundle(satellite_analysis, weather_risk)
             

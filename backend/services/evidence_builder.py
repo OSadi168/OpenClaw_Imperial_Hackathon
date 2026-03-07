@@ -57,13 +57,7 @@ class EvidenceBuilder:
                 with open(filepath, 'r') as f:
                     bundle_data = json.load(f)
                 
-                bundles.append({
-                    "bundle_id": bundle_data.get("bundle_id"),
-                    "aoi_name": bundle_data.get("aoi_name", "Unknown"),
-                    "created_at": bundle_data.get("created_at"),
-                    "total_confidence": bundle_data.get("total_confidence", 0.0),
-                    "file_path": str(filepath)
-                })
+                bundles.append(bundle_data)
             except Exception as e:
                 print(f"Error reading bundle {filepath}: {e}")
         

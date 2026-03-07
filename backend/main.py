@@ -64,6 +64,7 @@ async def health_check():
 
 
 @app.post("/run", response_model=OrchestratorResponse)
+@app.post("/api/analyze", response_model=OrchestratorResponse)
 async def run_orchestrator(request: OrchestratorRequest):
     """
     Run the environmental intelligence orchestrator for a given AOI.
@@ -73,6 +74,8 @@ async def run_orchestrator(request: OrchestratorRequest):
     """
     try:
         response = orchestrator.run_agents(request)
+        if response.evidence_bundle:
+            evidence_builder.save_bundle(response.evidence_bundle)
         return response
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Orchestrator execution failed: {str(e)}")
@@ -158,6 +161,44 @@ async def get_evidence_types():
             "weather_data": "General weather data"
         }
     }
+
+
+SAMPLE_AOIS = {
+    "Amazon Ridge Conservation Area": {
+        "id": "amazon_ridge_01",
+        "name": "Amazon Ridge Conservation Area",
+        "coordinates": [[[-63.0, -3.5], [-62.8, -3.5], [-62.8, -3.3], [-63.0, -3.3], [-63.0, -3.5]]],
+        "area_hectares": 5000.0
+    },
+    "Borneo Forest Reserve": {
+        "id": "borneo_forest_02",
+        "name": "Borneo Forest Reserve",
+        "coordinates": [[[114.5, 1.2], [114.7, 1.2], [114.7, 1.4], [114.5, 1.4], [114.5, 1.2]]],
+        "area_hectares": 7500.0
+    },
+    "Congo Basin Protection Zone": {
+        "id": "congo_basin_03",
+        "name": "Congo Basin Protection Zone",
+        "coordinates": [[[18.0, -1.5], [18.3, -1.5], [18.3, -1.2], [18.0, -1.2], [18.0, -1.5]]],
+        "area_hectares": 10000.0
+    }
+}
+
+
+@app.post("/api/analyze/simple")
+async def analyze_simple(body: Dict[str, Any]):
+    """Run analysis with just aoi_name. Example: {"aoi_name": "Amazon Ridge Conservation Area"}"""
+    aoi_name = body.get("aoi_name", "Amazon Ridge Conservation Area")
+    aoi_data = SAMPLE_AOIS.get(aoi_name, list(SAMPLE_AOIS.values())[0])
+    try:
+        aoi = AOI(**aoi_data)
+        request = OrchestratorRequest(aoi=aoi)
+        response = orchestrator.run_agents(request)
+        if response.evidence_bundle:
+            evidence_builder.save_bundle(response.evidence_bundle)
+        return response
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 # Sample AOI endpoints for hackathon demo

@@ -10,9 +10,9 @@ export default function RunPage() {
   const [results, setResults] = useState<any>(null)
 
   const sampleAOIs = [
-    { id: 'amazon_ridge_01', name: 'Amazon Ridge Conservation Area', area: 5000 },
-    { id: 'borneo_forest_02', name: 'Borneo Forest Reserve', area: 7500 },
-    { id: 'congo_basin_03', name: 'Congo Basin Protection Zone', area: 10000 }
+    { id: 'amazon_ridge_01', name: 'Amazon Ridge Conservation Area', area_hectares: 5000, coordinates: [[[-63.0, -3.5], [-62.8, -3.5], [-62.8, -3.3], [-63.0, -3.3], [-63.0, -3.5]]] },
+    { id: 'borneo_forest_02', name: 'Borneo Forest Reserve', area_hectares: 7500, coordinates: [[[114.5, 1.2], [114.7, 1.2], [114.7, 1.4], [114.5, 1.4], [114.5, 1.2]]] },
+    { id: 'congo_basin_03', name: 'Congo Basin Protection Zone', area_hectares: 10000, coordinates: [[[18.0, -1.5], [18.3, -1.5], [18.3, -1.2], [18.0, -1.2], [18.0, -1.5]]] }
   ]
 
   const evidenceTypes = [
@@ -69,7 +69,7 @@ export default function RunPage() {
                     />
                     <label className="flex-1">
                       <div className="font-medium">{aoi.name}</div>
-                      <div className="text-sm text-gray-500">{aoi.area.toLocaleString()} hectares</div>
+                      <div className="text-sm text-gray-500">{aoi.area_hectares.toLocaleString()} hectares</div>
                     </label>
                   </div>
                 ))}

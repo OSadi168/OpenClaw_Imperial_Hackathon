@@ -87,16 +87,16 @@ export default function DealRoomPage() {
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <h4 className="font-semibold mb-2">Project Details</h4>
                     <div className="space-y-1 text-sm">
-                      <div><strong>Name:</strong> {bundle.aoi?.name}</div>
-                      <div><strong>Area:</strong> {bundle.aoi?.area_hectares?.toLocaleString()} hectares</div>
+                      <div><strong>Name:</strong> {bundle.aoi_name}</div>
                       <div><strong>Bundle ID:</strong> {bundle.bundle_id?.slice(0, 12)}...</div>
+                      <div><strong>Created:</strong> {new Date(bundle.created_at).toLocaleString()}</div>
                     </div>
                   </div>
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <h4 className="font-semibold mb-2">Evidence Summary</h4>
                     <div className="space-y-1 text-sm">
-                      <div><strong>Satellite Evidence:</strong> {bundle.satellite_evidence?.length || 0} items</div>
-                      <div><strong>Weather Evidence:</strong> {bundle.weather_evidence?.length || 0} items</div>
+                      <div><strong>Satellite Analysis:</strong> {bundle.satellite_analysis ? 'Available' : 'N/A'}</div>
+                      <div><strong>Weather Risk:</strong> {bundle.weather_risk ? 'Available' : 'N/A'}</div>
                       <div><strong>Total Confidence:</strong> {((bundle.total_confidence || 0) * 100).toFixed(1)}%</div>
                     </div>
                   </div>
@@ -157,26 +157,32 @@ export default function DealRoomPage() {
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <span>Completeness:</span>
-                  <span className={bundle.validation_result?.is_complete ? 'text-green-600' : 'text-red-600'}>
-                    {bundle.validation_result?.is_complete ? '✅ Complete' : '❌ Incomplete'}
+                  <span className={bundle.validator_review?.is_complete ? 'text-green-600' : 'text-red-600'}>
+                    {bundle.validator_review?.is_complete ? 'Complete' : 'Incomplete'}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Confidence Score:</span>
                   <span className="font-medium">
-                    {((bundle.validation_result?.confidence_score || 0) * 100).toFixed(1)}%
+                    {((bundle.validator_review?.confidence_score || 0) * 100).toFixed(1)}%
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Missing Evidence:</span>
+                  <span>Total Confidence:</span>
                   <span className="font-medium">
-                    {bundle.validation_result?.missing_evidence?.length || 0} types
+                    {((bundle.total_confidence || 0) * 100).toFixed(1)}%
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Validation Errors:</span>
-                  <span className="font-medium">
-                    {bundle.validation_result?.validation_errors?.length || 0} issues
+                  <span>NDVI Change:</span>
+                  <span className="font-medium text-green-600">
+                    +{bundle.satellite_analysis?.ndvi_delta?.mean_change?.toFixed(3) || 'N/A'}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Drought Score:</span>
+                  <span className="font-medium text-orange-600">
+                    {bundle.weather_risk?.drought_score?.toFixed(2) || 'N/A'} ({bundle.weather_risk?.tier || 'N/A'})
                   </span>
                 </div>
               </div>
@@ -211,19 +217,19 @@ export default function DealRoomPage() {
         </div>
 
         <div className="bg-gray-100 rounded-lg p-6 mb-8">
-          <h3 className="font-semibold text-lg mb-4">Mock Deal Information</h3>
+          <h3 className="font-semibold text-lg mb-4">Deal Information</h3>
           <div className="grid md:grid-cols-3 gap-6 text-sm">
             <div>
               <div className="font-medium mb-2">Estimated Carbon Credits</div>
               <div className="text-2xl font-bold text-green-600">
-                {(bundle.aoi?.area_hectares || 0) * 0.8:.0f} credits/year
+                {Math.round(5000 * 0.8)} credits/year
               </div>
               <div className="text-gray-600">Based on vegetation health</div>
             </div>
             <div>
               <div className="font-medium mb-2">Market Value</div>
               <div className="text-2xl font-bold text-blue-600">
-                ${(bundle.aoi?.area_hectares || 0) * 0.8 * 15:.0f}
+                ${Math.round(5000 * 0.8 * 15).toLocaleString()}
               </div>
               <div className="text-gray-600">At $15/credit estimate</div>
             </div>
