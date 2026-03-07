@@ -1,0 +1,92 @@
+{
+  "bundle_name": "EnvironmentalEvidenceBundle",
+  "generated_at": "2026-03-06T18:32:49.389124+00:00",
+  "run_id": "e744503b0b84",
+  "data_sources": [
+    "Sentinel-2 NDVI analysis",
+    "Drought risk analysis"
+  ],
+  "site_description": {
+    "aoi_bbox_epsg4326": [
+      -0.489,
+      51.28,
+      0.236,
+      51.686
+    ],
+    "aoi_type": "pending_manual_description",
+    "region": "Greater London / Europe",
+    "monitoring_purpose": "Environmental change detection and MRV-style evidence generation"
+  },
+  "pre_work_baseline_evidence": {
+    "scene_id": "S2C_MSIL2A_20250130T111341_R137_T30UXB_20250206T165811",
+    "scene_date": "2025-01-30",
+    "cloud_cover": 0.023069,
+    "mean_ndvi": 0.31048256158828735,
+    "valid_pixel_ratio": 0.39265605875153,
+    "quality_flags": [
+      "LOW_VALID_PIXEL_RATIO"
+    ]
+  },
+  "post_work_latest_evidence": {
+    "scene_id": "S2A_MSIL2A_20251225T110511_R094_T30UXC_20251225T145009",
+    "scene_date": "2025-12-25",
+    "cloud_cover": 0.020028,
+    "mean_ndvi": 0.274732768535614,
+    "valid_pixel_ratio": 1.0,
+    "quality_flags": []
+  },
+  "change_analysis": {
+    "ndvi_delta": -0.03574979305267334,
+    "delta_quality_flags": [
+      "LOW_VALID_PIXEL_RATIO"
+    ],
+    "change_signals": {
+      "sig_loss_fraction": 0.22026427169724047,
+      "sig_gain_fraction": 0.17554943031601233
+    },
+    "interpretation": "Vegetation signal shows a slight decline between the baseline and latest observation."
+  },
+  "environmental_risk_assessment": {
+    "drought_score": 7.149958610534668,
+    "tier": "LOW",
+    "confidence": "HIGH",
+    "drivers": [
+      "No strong drought signals detected from available features"
+    ],
+    "warnings": [],
+    "debug": {
+      "ppt_z": 0.0,
+      "t_z": 0.0,
+      "ppt_risk": 0.0,
+      "temp_risk": 0.0,
+      "wb_risk": 0.0,
+      "ndvi_risk": 0.23833195368448895,
+      "ndvi_delta": -0.03574979305267334,
+      "ndvi_valid_pixel_ratio": 1.0
+    }
+  },
+  "validation_and_quality_review": {
+    "validation_status": "PASS_WITH_CAVEATS",
+    "quality_observations": [
+      "Baseline valid pixel ratio: 0.39265605875153",
+      "Latest valid pixel ratio: 1.0",
+      "Baseline scene quality flags: ['LOW_VALID_PIXEL_RATIO']",
+      "NDVI delta quality flags: ['LOW_VALID_PIXEL_RATIO']",
+      "Drought model confidence: HIGH"
+    ],
+    "limitations": [
+      "Baseline scene has LOW_VALID_PIXEL_RATIO, so before/after comparison should be interpreted with caution.",
+      "NDVI change outputs contain quality flags that may affect interpretation."
+    ],
+    "review_type": "preliminary_rule_based_validation"
+  },
+  "compliance_mrv_caveats": {
+    "compliance_status": "preliminary_demo_artifact",
+    "statements": [
+      "This report is generated from automated environmental analysis outputs.",
+      "This artifact is intended for exploratory monitoring and MRV-style evidence generation.",
+      "It is not a certified regulatory or registry-compliant submission.",
+      "Formal third-party review and domain validation would be required for production MRV use."
+    ]
+  }
+}
